@@ -11,8 +11,9 @@ Até o dado momento, ainda não foi desenvolvida algorítmos próprios para util
 
 ## Ideias
 Para fornecer alguma opinião à respeito do projeto, crie um novo [Issue](https://github.com/wilmacedo/Sheyla/issues).
-- [ ] Reconhecer diferentes vozes de usuários.
-- [ ] Desenvolvimento de Inteligência Artificial para melhores respostas por parte do assistente.
+- [X] Adicionar funções por parte do usuário;
+- [X] Reconhecer diferentes vozes de usuários;
+- [ ] Desenvolvimento de Inteligência Artificial para melhores respostas por parte do assistente;
 - [ ] Plataforma com retrocompatibilidade entre outros sistemas, fora do ecossistema VIZE.
 
 ## Contato
