@@ -1,17 +1,17 @@
 #include <Results.h>
 #include <IRremote.h>
 
-#define SLAVE_ADDRESS 0x40
-
 Results results;
 IRsend sender;
 
 unsigned int tv[][67] = {};
+bool upd;
 
 void executeCommand(Command command)
 {
 	if (command.device == command.TV)
 	{
+		Serial.println(command.device);
 		if (command.mode == command.VOLUME_UP || command.mode == command.VOLUME_DOWN)
 		{
 			for (int i = 0; i < command.response; i++)
@@ -22,6 +22,8 @@ void executeCommand(Command command)
 		{
 			sendIR(tv, command.mode);
 		}
+		Serial.println(command.mode);
+		Serial.println(command.response);
 	}
 }
 
@@ -34,20 +36,27 @@ void sendIR(unsigned int device[][67], int mode)
 void setup()
 {
 	Serial.begin(9600);
-
-	//Wire.begin(SLAVE_ADDRESS);
 }
 
 void loop()
 {
-	results.update();
+	int len = sizeof(results.commands) / sizeof(results.commands[0]);
+	upd = results.update();
 
-	executeCommand(results.getCommand(0));
+	if (results.commands[0].length() > 0 && upd)
+	{
+		for (int i = 0; i < len; i++)
+		{
+			if (results.commands[i].length() > 0)
+			{
+				Serial.print("Comando ");
+				Serial.println(i);
+				executeCommand(results.getCommand(i));
+			}
+		}
 
-	delay(1000);
-}
+		upd = false;
+	}
 
-void I2CReceived(int howMany)
-{
-	results.update();
+	//delay(100);
 }
