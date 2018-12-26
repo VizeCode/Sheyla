@@ -1,11 +1,10 @@
-#include <Wire.h>
 #include <Command.h>
 
 struct Results
 {
 	String commands[30];
 
-	void update()
+	bool update()
 	{
 		String command;
 		int splits[10];
@@ -33,7 +32,11 @@ struct Results
 				command = command.substring(index + 1);
 				countCommands++;
 			}
+
+			return true;
 		}
+
+		return false;
 	}
 
 	Command getCommand(int i)
