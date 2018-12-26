@@ -5,25 +5,34 @@ Results results;
 IRsend sender;
 
 unsigned int tv[][67] = {};
+unsigned int ar[][67] = {};
+
 bool upd;
 
 void executeCommand(Command command)
 {
-	if (command.device == command.TV)
+	switch (command.device)
 	{
-		Serial.println(command.device);
-		if (command.mode == command.VOLUME_UP || command.mode == command.VOLUME_DOWN)
+		case command.TV:
+			standardSetup(command, command.VOLUME_UP, command.VOLUME_DOWN, tv);
+			break;
+		case command.AR:
+			standardSetup(command, command.TEMP_UP, command.TEMP_DOWN, ar);
+			break;
+	}
+}
+
+void standardSetup(Command command, int up, int down, unsigned int device[][67])
+{
+	if (command.mode == up || command.mode == down)
+	{
+		for (int i = 0; i < command.response; i++)
 		{
-			for (int i = 0; i < command.response; i++)
-			{
-				sendIR(tv, command.mode);
-			}
-		} else
-		{
-			sendIR(tv, command.mode);
+			sendIR(device, command.mode);
 		}
-		Serial.println(command.mode);
-		Serial.println(command.response);
+	} else
+	{
+		sendIR(device, command.mode);
 	}
 }
 
@@ -42,6 +51,7 @@ void loop()
 {
 	int len = sizeof(results.commands) / sizeof(results.commands[0]);
 	upd = results.update();
+	int count = 0;
 
 	if (results.commands[0].length() > 0 && upd)
 	{
@@ -49,14 +59,9 @@ void loop()
 		{
 			if (results.commands[i].length() > 0)
 			{
-				Serial.print("Comando ");
-				Serial.println(i);
 				executeCommand(results.getCommand(i));
 			}
 		}
-
 		upd = false;
 	}
-
-	//delay(100);
 }
